@@ -15,40 +15,62 @@
 package com.google.codeu.codingchallenge;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 final class MyJSON implements JSON {
 
-  @Override
-  public JSON getObject(String name) {
-    // TODO: implement this
-    return null;
-  }
+    //internal storage of JSON OBJECT values
+    private Map<String, JSON> jsonObjectValueMap = new HashMap<>();
 
-  @Override
-  public JSON setObject(String name, JSON value) {
-    // TODO: implement this
-    return this;
-  }
+    //internal storage of JSON STRING values
+    private Map<String, String> jsonStringValueMap = new HashMap<>();
 
-  @Override
-  public String getString(String name) {
-    // TODO: implement this
-    return null;
-  }
+    @Override
+    public JSON getObject(String name) {
+        Asserts.isNotNull(name);
 
-  @Override
-  public JSON setString(String name, String value) {
-    // TODO: implement this
-    return this;
-  }
+        return this.jsonObjectValueMap.get(name);
+    }
 
-  @Override
-  public void getObjects(Collection<String> names) {
-    // TODO: implement this
-  }
+    @Override
+    public JSON setObject(String name, JSON value) {
+        Asserts.isNotNull(name);
+        Asserts.isNotNull(value);
 
-  @Override
-  public void getStrings(Collection<String> names) {
-    // TODO: implement this
-  }
+        this.jsonObjectValueMap.put(name, value);
+        return this;
+    }
+
+    @Override
+    public String getString(String name) {
+        Asserts.isNotNull(name);
+
+        return this.jsonStringValueMap.get(name);
+    }
+
+    @Override
+    public JSON setString(String name, String value) {
+        Asserts.isNotNull(name);
+        Asserts.isNotNull(value);
+
+        this.jsonStringValueMap.put(name, value);
+        return this;
+    }
+
+    @Override
+    public void getObjects(Collection<String> names) {
+        Asserts.isNotNull(names);
+        Asserts.isTrue(names.isEmpty(), "collection is not empty");
+
+        names.addAll(this.jsonObjectValueMap.keySet());
+    }
+
+    @Override
+    public void getStrings(Collection<String> names) {
+        Asserts.isNotNull(names);
+        Asserts.isTrue(names.isEmpty(), "collection is not empty");
+
+        names.addAll(this.jsonStringValueMap.keySet());
+    }
 }

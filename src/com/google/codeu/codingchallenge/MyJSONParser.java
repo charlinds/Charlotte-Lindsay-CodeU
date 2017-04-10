@@ -75,8 +75,8 @@ final class MyJSONParser implements JSONParser {
 
         private String input;
 
-        // analyse the input string into a list of Terminals.
-        // returns false if errors are encountered while doing so.
+        // analyse the input string into a list of Terminals
+        // returns false if errors are encountered
         public boolean analyse() {
             int i = 0;
             while (i < input.length()) {
@@ -95,8 +95,8 @@ final class MyJSONParser implements JSONParser {
                         this.terminalSequence.add(COMMA);
                         break;
                     case '"':
-                        // see the start of a JSON string.
-                        // This case looks forward into the input character by character and builds the string.
+                        // check the start of a JSON string
+                        // This case looks at the input character by character and builds the string.
                         StringBuilder stringBuilder = new StringBuilder();
                         boolean stringCompleted = false;
                         while (!stringCompleted) {
@@ -107,13 +107,13 @@ final class MyJSONParser implements JSONParser {
                             char c2 = input.charAt(i);
                             switch (c2) {
                                 case '"':
-                                    // ok, end of string, create terminal and break to main while loop
+                                    // end of string, create terminal and break to main while loop
                                     stringCompleted = true;
                                     this.terminalSequence.add(new Terminal(JSON_STRING, stringBuilder.toString()));
                                     break;
                                 case '\\':
-                                    // \ is the escape character.
-                                    // 4 possible escape sequences -> \" \\ \t and \n
+                                    // \ is the escape character
+                                    // 4 possible escape sequences: \" \\ \t and \n
                                     // in each case, add the escape sequence to the string builder
                                     i++;
                                     if (i == input.length()) {
@@ -139,7 +139,7 @@ final class MyJSONParser implements JSONParser {
                                     }
                                     break;
                                 default:
-                                    // not a special character, just add to the builder
+                                    // otherwise, not a special character, just add to the builder
                                     stringBuilder.append(c2);
                                     break;
                             }
@@ -147,10 +147,10 @@ final class MyJSONParser implements JSONParser {
                         break;
                     default:
                         if (Character.isWhitespace(c)) {
-                            // skip whitespace characters
+                            // skip whitespace
                             break;
                         } else {
-                            // unexpected character, return false
+                            // unexpected character, return false (error)
                             return false;
                         }
                 }
@@ -167,8 +167,7 @@ final class MyJSONParser implements JSONParser {
 
     }
 
-    // parses the sequence of Terminals, according to the "JSON-lite" parsing rules:
-
+    //JSON-lite specifications
     /*
      *
      *  object
@@ -236,7 +235,7 @@ final class MyJSONParser implements JSONParser {
             return this.terminalSequence.get(this.terminalSequencePosition);
         }
 
-        // just a temporary holder of JSON data
+        // temp holder of JSON data
         static class JsonHolder {
             public String jsonString;
             public JSON jsonObject;
@@ -252,7 +251,7 @@ final class MyJSONParser implements JSONParser {
             }
         }
 
-        // parsing rule for KeyValuePair(s). If success the key-value pairs are added to jsonObject
+        // if successful, the key-value pairs are added to jsonObject
         boolean parseKeyValuePairs(JSON jsonObject) {
 
             int terminalSequencePosition = getTerminalSequencePosition();
@@ -275,7 +274,7 @@ final class MyJSONParser implements JSONParser {
 
         }
 
-        // parsing rule for a KeyValuePair. If success the key-value pair is added to jsonObject
+        // if successful, the key-value pair is added to jsonObject
         boolean parseKeyValuePair(JSON jsonObject) {
 
             int terminalSequencePosition = getTerminalSequencePosition();
@@ -296,7 +295,7 @@ final class MyJSONParser implements JSONParser {
             }
         }
 
-        // parsing rule for a JSON string. If success, the result is in holder.jsonString
+        // if successful, the result is in holder.jsonString
         boolean parseString(JsonHolder holder) {
             int terminalSequencePosition = getTerminalSequencePosition();
 
@@ -308,7 +307,7 @@ final class MyJSONParser implements JSONParser {
             return false;
         }
 
-        // parsing rule for a JSON value, which can be a JSON string or object. If success the appropriate field in the holder is populated
+        // if successful,  the appropriate field in the holder is populated
         boolean parseValue(JsonHolder holder) {
             int terminalSequencePosition = getTerminalSequencePosition();
 
@@ -328,7 +327,8 @@ final class MyJSONParser implements JSONParser {
             }
         }
 
-        // parsing rule for a JSON Object. If success then jsonObject is populated, else it is untouched
+        // if successful, then jsonObject is populated
+        // else, it is untouched
         boolean parseObject(JSON jsonObject) {
 
             int terminalSequencePosition = getTerminalSequencePosition();
